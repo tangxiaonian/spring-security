@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tang.rbac.mapper.SysPermissionMapper">
+
+    <resultMap id="SysPermissionResultMap" type="SysPermission">
+
+        <id property="id" column="id"/>
+        <result property="perName" column="per_Name"/>
+        <result property="perTag" column="per_Tag"/>
+
+    </resultMap>
+
+    <!-- 通过用户名查询用户的权限 -->
+    <select id="findPermissionByUserName" parameterType="String" resultMap="SysPermissionResultMap">
+        SELECT s_p.* FROM sys_user s_u
+        INNER JOIN sys_user_role s_u_r ON s_u.id = s_u_r.user_id
+        INNER JOIN sys_role s_r on s_r.id = s_u_r.role_id
+        INNER JOIN sys_role_permission s_r_p on s_r_p.role_id = s_r.id
+        INNER JOIN sys_permission s_p on s_p.id = s_r_p.perm_id
+      <where>
+          <if test="username != null">
+              s_u.username = #{username}
+          </if>
+      </where>
+
+    </select>
+
+</mapper>
